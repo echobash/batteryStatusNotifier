@@ -1,0 +1,25 @@
+#!/bin/bash
+#Author:echo_bash | Ali Anwar
+battery_level=$(acpi -b |cut -d "," -f2| sed 's/%//g')
+echo $battery_level
+ac_power=$(acpi -b|grep -c "Charging")
+echo $ac_power
+
+#when the battery is charging and it gets charged upto 100%
+if [[ $ac_power -eq 1 && $battery_level -eq 100 ]] 
+then
+export DISPLAY=:0.0
+notify-send -i "/usr/local/bin/battery_full.png" "Ali ,Battery is full." "Level: $battery_level% ";
+espeak "Charge full, Please Remove the charger" -s 140
+fi
+#when the battery is not charging and it goes below 30%
+if [[ $ac_power -eq 0 && $battery_level -lt 30 ]] 
+then
+export DISPLAY=:0.0
+notify-send -i "/usr/local/bin/battery_low.png" "Ali ,Battery is Low." "Level: $battery_level% ";
+espeak "Please connect the charger" -s 140
+fi
+
+
+
+
